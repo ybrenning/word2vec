@@ -2,6 +2,10 @@
 
 This repo contains material from a project on Word2Vec for the course "Modèles de Langage" at Aix-Marseille Université.
 
+The project comprises two parts: the implementation and improvement of a base Word2Vec model using negative sampling and subsampling, and the evaluation of word analogies using existing embeddings from [NLPL](http://vectors.nlpl.eu/repository/).
+
+The findings are documented in [this report](https://github.com/ybrenning/word2vec/blob/main/report/report.pdf).
+
 ## Setup
 
 ### Install dependencies 
@@ -29,7 +33,7 @@ Feel free to read the metadata and README contained in the downloaded folder, th
 
 ```bash
 $ mv 43/model.txt data
-$ rm -rf 43
+$ rm -rf 43 43.zip
 ```
 
 The analogies experiment for the second part of the report is contained in `analogies.py`.
