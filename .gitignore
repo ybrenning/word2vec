@@ -1,0 +1,13 @@
+**/venv
+**/__pycache__
+
+**.txt
+**.npy
+**.pkl
+
+!scores/scores-baseline-d.npy
+!scores/scores-unigram-d.npy
+!scores/scores-subsampling-d.npy
+!scores/scores-both-d.npy
+
+!times/*.npy
