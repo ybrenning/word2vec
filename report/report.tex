@@ -30,7 +30,7 @@
 
 \section{Introduction} \label{introduction}
 
-Ce projet, étudie de quelques manières Word2Vec, un groupe de modèles pour la géneration des plongements de mots statiques publié pour la première fois par \cite{DBLP:journals/corr/abs-1301-3781}. Dans ce document, deux architectures principales : CBOW (\textit{continuous bag-of-words}), et \textit{Skip-gram} sont présentées. Dans ce cas, j'examinerai le modèle \textit{Skip-gram with negative sampling}, qui était introduit à la suite du document original par \cite{DBLP:conf/nips/MikolovSCCD13}. Les plongements générés par Word2Vec devraient être proches si les mots apparaîssent dans les contextes similaires, comme ``bicyclette'' et ``vélo''.
+Ce projet étudie de quelques manières Word2Vec, un groupe de modèles pour la géneration des plongements de mots statiques publié pour la première fois par \cite{DBLP:journals/corr/abs-1301-3781}. Dans ce document, deux architectures principales : CBOW (\textit{continuous bag-of-words}), et \textit{Skip-gram} sont présentées. Dans ce cas, j'examinerai le modèle \textit{Skip-gram with negative sampling}, qui était introduit à la suite du document original par \cite{DBLP:conf/nips/MikolovSCCD13}. Les plongements générés par Word2Vec devraient être proches si les mots apparaîssent dans les contextes similaires, comme ``bicyclette'' et ``vélo''.
 
 Généralement, le modèle Skip-gram vise à prédire les mots qui apparaissent dans le contexte d'un certain mot cible. Nous entraînons un classifieur binaire sur les mots d'un corpus tel qu'il calcule la probabilité qu'un mot $c$ apparaît dans le contexte d'un mot cible $m$, écrit $P(+|m, c)$. De manière analogue pour les mots hors du contexte de $m$, nous notons $P(-|m, c)$. Ces probabilités sont calculées en utilisant la fonction sigmo\"\i de et le produit scalaire des vecteurs $\mathbf{m} $ et $ \mathbf{c} $ (voir les équations~\ref{eq:prob}), qui sont les plongements de $m$ et $c$. Les vecteurs sont stockés dans des matrices $\mathbf{M}$ et $\mathbf{C}$ tel que $\mathbf{M}$ contient les plongements pour chaque mot à la fin de l'apprentissage.
 
@@ -73,7 +73,7 @@ Nous stockons la $\mathbf{M}$, qui contient les plongements de mots sous forme d
 
 Comme notre modèle suit les spécifications de \cite{DBLP:journals/corr/abs-1301-3781}, la fenêtre du contexte change sa taille aléatoirement entre $<1, L>$ pour chaque mot cible, ce qui accélère considérablement l'apprentissage. L'initialisation aléatoire des matrices suit d'ailleurs une distribution uniforme entre $[-\frac{0{,}5}{d}, \frac{0{,}5}{d})$, où $d$ est la dimension des plongements.
 
-Le point de comparaison sur 10 expériences est un taux de réussite moyen de 53{,}2\% avec un écart type de 3{,}9 sur un configuration donné de paramètres.\footnote{Dimension des plongements $d=100$, taille de fenêtre $L=2$, nombre d'exemples négatifs par exemple plositif $k=10$, taux d'apprentissage $\eta=0{,}1$, nombre d'itérations $n\textunderscore iter=5$, nombre minimum d'occurences $minc=5$.} Lors de nos expériences, les résultats que nous avons obtenus avec notre implémentation de base sont un taux de réussite moyen de 63.8\% et un écart type de 2.2.
+Le point de comparaison sur 10 expériences est un taux de réussite moyen de 53{,}2\% avec un écart type de 3{,}9 sur un configuration donné de paramètres.\footnote{Dimension des plongements $d=100$, taille de fenêtre $L=2$, nombre d'exemples négatifs par exemple plositif $k=10$, taux d'apprentissage $\eta=0{,}1$, nombre d'itérations $n\_ iter=5$, nombre minimum d'occurences $minc=5$.} Lors de nos expériences, les résultats que nous avons obtenus avec notre implémentation de base sont un taux de réussite moyen de 63{,}8\% et un écart type de 2{,}2.
 
 Concernant l'approche pour l'échantillonage des exemples négatifs, nous pouvons constater quelques limitations potentiels. Tout d'abord, nous avons la possibilité de tirer un exemple positif par accident, car la sélection s'éffectue sur l'ensemble du lexique. De plus, nous traitons tout les mots du vocabulaire de la même manière, ce qui n'est pas vraiment conforme à la réalité, où les fréquences et les niveaux d'informations contenues peuvent être très différentes d'un mot à l'autre. Par exemple, les mots comme \texttt{le} ou \texttt{et} sont très fréquents, pourtant ils peuvent ne pas contenir autant d'informations que quelques mots plutôt rares. 
 
@@ -81,7 +81,7 @@ La même idée s'applique à la génération des exemples positifs, car la fenê
 
 Tous les deux limitations mentionées ci-dessus sont en rapport avec ma première piste à creuser, dans laquelle j'essayerai d'améliorer les résultats du modèle précédemment détaillé.  
 
-Un autre limitation est la taille du vocabulaire du corpus utilisé jusqu'à ce point. Pour s'attaquer au problème des analogies, j'utiliserai alors des plongements préexistants, entraînés sur le corpus plus large ``French CoNLL17'' par \cite{fares-etal-2017-word}. Pour comparer, le corpus utilisé jusqu'à ce point contient un vocabulaire de 3,210 mots, alors que celui utilisé par \cite{fares-etal-2017-word} contient 2,567,698 mots.
+Un autre limitation est la taille du vocabulaire du corpus utilisé jusqu'à ce point. Pour s'attaquer au problème des analogies, j'utiliserai alors des plongements préexistants, entraînés sur le corpus plus large ``French CoNLL17'' par \cite{fares-etal-2017-word}. Pour comparer, le corpus utilisé jusqu'à ce point contient un vocabulaire de 3.210 mots, alors que celui utilisé par \cite{fares-etal-2017-word} contient 2.567.698 mots.
 
 \section{Amélioration des performances} \label{amélioration des performances}
 
@@ -91,7 +91,7 @@ Afin d'améliorer le modèle Word2Vec, \cite{DBLP:conf/nips/MikolovSCCD13} propo
 
 Premièrement, nous aborderons une différente méthode pour la sélection des exemples négatifs. Jusqu'a maintenant, nous choisissons les exemples négatifs aléatoirement d'une distribution uniforme sur l'ensemble des mots dans le lexique. 
 
-\cite{DBLP:conf/nips/MikolovSCCD13} proposent une variation de la distribution d'unigramme en tant que distribution de probabilité pour le processus d'échantillonage, parfois appelé distribution \textit{smooth} (lisse) d'unigramme \citep{levy2015improving}. Nous tirons donc un exemple négatif $c_{neg}$ avec la probabilité $P(m)$ (voir l'équation~\ref{eq:unigram}), où $\#(m)$ designe le nombre d'occurences de $m$ dans le corpus. Le document original indique que les meilleurs résultats ont été obtenus en augmentant la distribution à une puissance de $\alpha = 0.75$, ce qui augmente les probabilités des mots rares. \cite{levy2015improving} démontrent ensuite les améliorations avec ce choix de paramètre, que nous utilisons aussi dans le cadre de l'expérience.
+\cite{DBLP:conf/nips/MikolovSCCD13} proposent une variation de la distribution d'unigramme en tant que distribution de probabilité pour le processus d'échantillonage, parfois appelé distribution \textit{smooth} (lisse) d'unigramme \citep{levy2015improving}. Nous tirons donc un exemple négatif $c_{neg}$ avec la probabilité $P(m)$ (voir l'équation~\ref{eq:unigram}), où $\#(m)$ designe le nombre d'occurences de $m$ dans le corpus. Le document original indique que les meilleurs résultats ont été obtenus en augmentant la distribution à une puissance de $\alpha = 0{,}75$, ce qui augmente les probabilités des mots rares. \cite{levy2015improving} démontrent ensuite les améliorations avec ce choix de paramètre, que nous utilisons aussi dans le cadre de l'expérience.
 
 \begin{equation}\label{eq:unigram}
 P(m) = \frac{\#(m)^{\alpha}}{\sum_{i=0}^n \#(m_i)^{\alpha}}
@@ -136,7 +136,7 @@ En plus, il y a des manières différents concernant quand on effectue le sous-�
 \begin{figure}[htpb]
     \centering
     \includegraphics[width=0.8\textwidth]{img/boxplot.png}
-    \caption{Moyen taux de réussite sur 10 expériences avec les paramètres $d=100$, $L=2$, $k=10$, $\eta=0{,}1$, $n\textunderscore iter=5$ et $minc=5$ pour chaque variation de modèle.}
+    \caption{Moyen taux de réussite sur 10 expériences avec les paramètres $d=100$, $L=2$, $k=10$, $\eta=0{,}1$, $n\_ iter=5$ et $minc=5$ pour chaque variation de modèle.}
     \label{fig:boxplot}
 \end{figure}
 
@@ -156,7 +156,7 @@ Comme mentionné précédemment, les plongements de mots permettent également d
 
 \subsection{Description} \label{description-2}
 
-Pour examiner le raisonnement analogique des plongements de mots, nous devons utiliser les distances entre les vecteurs pour déterminer quel plongement est le plus proche du résultat de notre calcul. Pour un ensemble de plongements $V = \{e_1, \dotsc, e_N\}$ et un plongement particulier $x \notin V$, nous cherchons trouver l'élément de $ V $ la plus proche de $x$ (voire l'équation~\ref{eq:dist}).\footnote{Pour cette expérience, la mesure de la distance $d$ est toujours euclidienne.}
+Pour examiner le raisonnement analogique des plongements de mots, nous devons utiliser les distances entre les vecteurs pour déterminer quel plongement est le plus proche du résultat de notre calcul. Pour un ensemble de plongements $V = \{e_1, \dotsc, e_N\}$ et un plongement particulier $x \notin V$, nous cherchons trouver l'élément de $ V $ la plus proche de $x$ (voir l'équation~\ref{eq:dist}).\footnote{Pour cette expérience, la mesure de la distance $d$ est toujours euclidienne.}
 
 \begin{equation}\label{eq:dist}
     \hat{e} = \underset{e \in V}{\text{argmin }} d(e, x)
@@ -186,15 +186,17 @@ Pour l'évaluation, nous creóns un ensemble de 100 analogies différentes en su
 \begin{figure}[htpb]
     \centering
     \includegraphics[width=0.8\textwidth]{img/times.png}
-    \caption{Durée de calcul en secondes pour chaque recherche du plus proche voisin du vecteur calculé par \texttt{vector(A) + vector(B) - vector(C)}.}
+    \caption{Durée d'éxecution en secondes pour chaque recherche du plus proche voisin du vecteur calculé par \texttt{vector(A) + vector(B) - vector(C)}.}
     \label{fig:times}
 \end{figure}
 
-Pour chaque façon de recherche, nous avons suivi les durées d'execution pour les calculs des analogies (c'est-à dire la recherche du plus proche voisin dans l'espace des plongements). Nous montrons les résultats en figure~\ref{fig:times}. Bien entendu, ces scores dépendent fortement de la machine et ne sont donc pas nécessairement représentatifs, mais ils serviront de points de référence généraux dans le contexte de cette expérience. Pour la 
+Pour chaque façon de recherche, nous avons suivi les durées d'execution pour les calculs des analogies (c'est-à dire la recherche du plus proche voisin dans l'espace des plongements). Nous montrons les résultats en figure~\ref{fig:times}. Bien entendu, ces scores dépendent fortement de la machine et ne sont donc pas nécessairement représentatifs, mais ils serviront de points de référence généraux dans le contexte de cette expérience. 
 
-En rapport avec notre hypothèse, nous pouvons affirmer que les calculs sont légèrement plus rapides, mais seulement par une faible marge, et en limitant le nombre de plongements utilisés. Globalement, nous pouvons dire que l'application de cette implémentation de l'arbre $k$-$d$ n'est pas nécessairement utile dans cette tâche spécifique.
+L'approche na\"\i ve prend un moyen de 0{,}819 secondes pour chaque recherche, avec un écart type de 0{,}019, tandis que l'implémentation de l'arbre $k$-$d$ effectue les recherches avec une durée moyenne de 0{,}735 secondes et un écart type de 0{,}006. Figure~\ref{fig:times} indique aussi des résultats plus cohérents avec l'arbre $k$-$d$. Le résultat de l'évaluation sur les 100 analogies est un taux de réussite de 49\%.\footnote{Il est important de souligner que ce résultat peut dépendre fortement des analogies utilisées.}
 
-Une raison pour ces résultats pourrait être un phénomène appelé \textit{curse of dimensionality} (le fléau de la dimension) par \cite{Freimer1961AdaptiveCP}, qui s'applique nottement aux tâches de recherche des plus proches voisins. Comme règle génerale, on constate que pour des données en dimension $ k $, le nombre de points $ n $ devrait être $ n \gg 2^k $ pour que cette recherche soit efficace \citep{indyk2004nearest}. Si ce n'est pas le cas, cette méthode pourrait ne pas être beaucoup plus rapide qu'une recherche exhaustive.
+En rapport avec notre hypothèse, nous pouvons donc affirmer que les calculs sont légèrement plus rapides, mais seulement par une faible marge, et en limitant le nombre de plongements utilisés. Globalement, nous pouvons dire que l'application de cette implémentation de l'arbre $k$-$d$ n'est pas nécessairement utile dans cette tâche spécifique.
+
+Une raison pour ces résultats pourrait être un phénomène appelé \textit{curse of dimensionality} (le fléau de la dimension) par \cite{Freimer1961AdaptiveCP}, qui s'applique nottament aux tâches de recherche des plus proches voisins. Comme règle génerale, on constate que pour des données en dimension $ k $, le nombre de points $ n $ devrait être $ n \gg 2^k $ pour que cette recherche soit efficace \citep{indyk2004nearest}. Si ce n'est pas le cas, cette méthode pourrait ne pas être beaucoup plus rapide qu'une recherche exhaustive.
 
 En plus, l'implémentation de l'arbre $k$-$d$ utilisé ici est assez simple, alors que les implémentations utilisés dans les bibliothèques comme Scikit-Learn utilisent des méthodes plus sophistiquées comme le pruning et les fonctionnalités de Cython\footnote{https://cython.org/}; une telle mise en œuvre surpasse le cadre de ce rapport. 
 
@@ -202,7 +204,11 @@ En plus, l'implémentation de l'arbre $k$-$d$ utilisé ici est assez simple, alo
 
 Le but de ce rapport était d'examiner le modèle Word2Vec et ses capacités dans quelques aspects. Surtout, nous avons explorés l'effet des méthodes d'améliorations présentés par \cite{DBLP:conf/nips/MikolovSCCD13} ainsi que l'aspect de l'évaluation des analogies.
 
-En ce qui concerne ses sujets, nous avons posé trois hypothèses sur les méthodes d'amélioration et une hypothèse sur l'évaluation des analogies. Nous avons crées, exécutés, et évalués deux expériences afin de répondre à les hypothèses. Les trois hypothèses sur le premier sujet ont été confirmées en montrant les améliorations sur le modèle de base, tandis que la hypothèse du deuxième sujet avait des résultats mitigés.
+En ce qui concerne ses sujets, nous avons posé trois hypothèses sur les méthodes d'amélioration et une hypothèse sur l'évaluation des analogies. Nous avons crées, exécutés, et évalués deux expériences afin de répondre à les hypothèses. Les trois hypothèses sur le premier sujet ont été confirmées en montrant les améliorations sur le modèle de base, tandis que la hypothèse du deuxième sujet avait des résultats mitigés. Les expériences ont montrés plusieurs aspects intéressants du modèle Word2Vec, notamment les influences des différentes méthodes d'échantillonage sur les performances du modèle et la capacité de l'inférence des analogies. 
+
+Il existent pourtant des possibilités d'élargir le cadre des expériences en quelques aspects. Comme mentionné précédemment, une meilleure infrastructure de calcul pourrait faciliter les recherches sur plus de plongements et la construction des arbres $k$-$d$ plus grandes. Par contre, l'utilisation d'une approche approximative qui est plus efficace sur les données de larges dimensions comme le ``Locality Sensitive Hashing'' pourrait aussi conduire à de meilleurs résultats \citep{andoni2008near}. D'ailleurs, les aspects que concernent l'entraînement du modèle, comme la taille de la fenêtre ou l'effet d'une fenêtre dynamique par rapport à une fenêtre non dynamique n'ont pas été explorés. En examinant ces aspects, entre autres, on pourrait mieux comprendre et aborder les sujets présentés dans ce rapport. 
+
+\newpage
 
 \bibliographystyle{plainnat}
 \bibliography{literature} 
