@@ -21,7 +21,7 @@
 \setlength{\footskip}{15mm}
 
 \title{Rapport Projet 2}
-\author{Leader : Yannick Brenning, Follower : Kossi Kossivi}
+\author{Leader : Yannick Brenning \\ Followers : Kossi Kossivi, Nesrine Ghannay}
 
 \begin{document}
 
@@ -52,7 +52,7 @@ Pour la deuxième piste, nous explorons les analogies, c'est-à-dire les associa
 
 Pour générer les plongements de mots avec un modèle de Word2Vec, nous avons d'abord besoin des données d'apprentissage. Dans le cadre de ce projet, nous utilisons ``Le Comte de Monte-Cristo'' comme corpus pour la création des données qui vont entraîner le modèle.
 
-Nous commencons par tokeniser les mots du corpus, c'est-à-dire diviser le texte dans les \textit{tokens} afin de structurer et simplifier le contenu pour le modèle. Sur la base de ces tokens, nous créons un vocabulaire avec lequel nous pouvons construire les exemples positifs et négatifs.
+Nous commençons par tokeniser les mots du corpus, c'est-à-dire diviser le texte dans les \textit{tokens} afin de structurer et de simplifier le contenu pour le modèle. Sur la base de ces tokens, nous créons un vocabulaire avec lequel nous pouvons construire les exemples positifs et négatifs.
 
 Pour la construction des exemples positifs, nous sélectionnons les mots qui apparaissent dans le contexte de chaque mot $m$ dans le vocabulaire. Le paramètre $L$ donne la taille du contexte, c'est-à-dire le nombre de mots précédant et suivant $m$ qui sont sélectionnés. Pour les exemples négatifs, l'approche na\"\i ve prend $k$ mots du lexique de façon aléatoire. 
 
@@ -74,15 +74,15 @@ Nous stockons la $\mathbf{M}$, qui contient les plongements de mots sous forme d
 
 Comme notre modèle suit les spécifications de \cite{DBLP:journals/corr/abs-1301-3781}, la fenêtre du contexte change sa taille aléatoirement entre $<1, L>$ pour chaque mot cible, ce qui accélère considérablement l'apprentissage. L'initialisation aléatoire des matrices suit d'ailleurs une distribution uniforme entre $[-\frac{0{,}5}{d}, \frac{0{,}5}{d})$, où $d$ est la dimension des plongements.
 
-Le point de comparaison sur 10 expériences est un taux de réussite moyen de 53{,}2\% avec un écart type de 3{,}9 sur un configuration donné de paramètres.\footnote{Dimension des plongements $d=100$, taille de fenêtre $L=2$, nombre d'exemples négatifs par exemple positif $k=10$, taux d'apprentissage $\eta=0{,}1$, nombre d'itérations $n\_ iter=5$, nombre minimum d'occurences $minc=5$.} Lors de nos expériences, les résultats que nous avons obtenus avec notre implémentation de base sont un taux de réussite moyen de 63{,}8\% et un écart type de 2{,}2.
+Le point de comparaison sur 10 expériences est un taux de réussite moyen de 53{,}2\% avec un écart type de 3{,}9 sur une configuration donnée de paramètres.\footnote{Dimension des plongements $d=100$, taille de fenêtre $L=2$, nombre d'exemples négatifs par exemple positif $k=10$, taux d'apprentissage $\eta=0{,}1$, nombre d'itérations $n\_ iter=5$, nombre minimum d'occurrences $minc=5$.} Lors de nos expériences, les résultats que nous avons obtenus avec notre implémentation de base sont un taux de réussite moyen de 63{,}8\% et un écart type de 2{,}2.
 
 Concernant l'approche pour l'échantillonnage des exemples négatifs, nous pouvons constater quelques limitations potentielles. Tout d'abord, nous avons la possibilité de tirer un exemple positif par accident, car la sélection s'effectue sur l'ensemble du lexique. De plus, nous traitons tous les mots du vocabulaire de la même manière, ce qui n'est pas vraiment conforme à la réalité, où les fréquences et les niveaux d'informations contenues peuvent être très différents d'un mot à l'autre. Par exemple, les mots comme \texttt{le} ou \texttt{et} sont très fréquents, pourtant ils peuvent ne pas contenir autant d'informations que quelques mots plutôt rares. 
 
 La même idée s'applique à la génération des exemples positifs, car la fenêtre contient souvent beaucoup de mots fréquents qui portent moins de signification que les mots moins fréquents. \cite{DBLP:conf/nips/MikolovSCCD13} mentionnent cela avec l'exemple du mot \texttt{France} : notre modèle Skip-gram bénéficie beaucoup plus de la cooccurrence avec \texttt{Paris} que la cooccurrence avec \texttt{la}. 
 
-Tous les deux limitations mentionnées ci-dessus sont en rapport avec ma première piste à creuser, dans laquelle j'essayerai d'améliorer les résultats du modèle précédemment détaillé.  
+Les deux limitations mentionnées ci-dessus sont en rapport avec la première piste à creuser, dans laquelle nous essaierons d'améliorer les résultats du modèle précédemment détaillé.  
 
-Une autre limitation est la taille du vocabulaire du corpus utilisé jusqu'à ce point. Pour s'attaquer au problème des analogies, j'utiliserai alors des plongements préexistants, entraînés sur le corpus plus large ``French CoNLL17'' par \cite{fares-etal-2017-word}. Pour comparer, le corpus utilisé jusqu'à ce point contient un vocabulaire de 3.210 mots, alors que celui utilisé par \cite{fares-etal-2017-word} contient 2.567.698 mots.
+Une autre limitation est la taille du vocabulaire du corpus utilisé jusqu'à ce point. Pour s'attaquer au problème des analogies, nous utiliserons alors des plongements préexistants, entraînés sur le corpus plus large ``French CoNLL17'' par \cite{fares-etal-2017-word}. Pour comparer, le corpus utilisé jusqu'à ce point contient un vocabulaire de 3.210 mots, alors que celui utilisé par \cite{fares-etal-2017-word} contient 2.567.698 mots.
 
 \section{Amélioration des performances} \label{amélioration des performances}
 
@@ -92,17 +92,17 @@ Afin d'améliorer le modèle Word2Vec, \cite{DBLP:conf/nips/MikolovSCCD13} propo
 
 Premièrement, nous aborderons une différente méthode pour la sélection des exemples négatifs. Jusqu'à maintenant, nous choisissons les exemples négatifs aléatoirement d'une distribution uniforme sur l'ensemble des mots dans le lexique. 
 
-\cite{DBLP:conf/nips/MikolovSCCD13} proposent une variation de la distribution d'unigramme en tant que distribution de probabilité pour le processus d'échantillonage, parfois appelé distribution \textit{smooth} (lisse) d'unigramme \citep{levy2015improving}. Nous tirerons donc un exemple négatif $c_{neg}$ avec la probabilité $P(m)$ (voir l'équation~\ref{eq:unigram}), où $\#(m)$ désigne le nombre d'occurrences de $m$ dans le corpus. Le document original indique que les meilleurs résultats ont été obtenus en augmentant la distribution à une puissance de $\alpha = 0{,}75$, ce qui augmente les probabilités des mots rares. \cite{levy2015improving} démontrent ensuite les améliorations avec ce choix de paramètre, que nous utilisons aussi dans le cadre de l'expérience.
+\cite{DBLP:conf/nips/MikolovSCCD13} proposent une variation de la distribution d'unigramme en tant que distribution de probabilité pour le processus d'échantillonnage, parfois appelé distribution \textit{smooth} (lisse) d'unigramme \citep{levy2015improving}. Nous tirerons donc un exemple négatif $c_{neg}$ avec la probabilité $P(m)$ (voir l'équation~\ref{eq:unigram}), où $\#(m)$ désigne le nombre d'occurrences de $m$ dans le corpus. Le document original indique que les meilleurs résultats ont été obtenus en augmentant la distribution à une puissance de $\alpha = 0{,}75$, ce qui augmente les probabilités des mots rares. \cite{levy2015improving} démontrent ensuite les améliorations avec ce choix de paramètre, que nous utilisons aussi dans le cadre de l'expérience.
 
 \begin{equation}\label{eq:unigram}
 P(m) = \frac{\#(m)^{\alpha}}{\sum_{i=0}^n \#(m_i)^{\alpha}}
 \end{equation}
 
-L'effet de cette distribution est tel que la probabilité des mots rares augmente, et la probabilité des mots fréquents diminue (voir également la figure~\ref{fig:unigram}). PMI (Pointwise mutual information) est une mesure d'association entre les mots \citep{jurafsky2000speech}, tel que les valeurs grandes indiquent des associations fortes. \cite{levy2014neural} montrent que le modèle Skip-gram décrit par \cite{DBLP:conf/nips/MikolovSCCD13} calcule implicitement des plongements qui se rapprochent des valeurs PMI entre les mots et les contextes, moins une constante. Selon \cite{levy2015improving}, l'objectif du smoothing est alors de réduire le biais du PMI en faveur des mots rares. 
+L'effet de cette distribution est tel que la probabilité des mots rares augmente, et la probabilité des mots fréquents diminue (voir également la figure~\ref{fig:unigram}). PMI (Pointwise mutual information) est une mesure d'association entre les mots \citep{jurafsky2000speech}, tel que les grandes valeurs indiquent des associations fortes. \cite{levy2014neural} montrent que le modèle Skip-gram décrit par \cite{DBLP:conf/nips/MikolovSCCD13} calcule implicitement des plongements qui se rapprochent des valeurs PMI entre les mots et les contextes, moins une constante. Selon \cite{levy2015improving}, l'objectif du smoothing est alors de réduire le biais du PMI en faveur des mots rares. 
 
 Avec ce changement, nous souhaitons donc améliorer la diversité des exemples négatifs sur lesquels nous entraînons le modèle afin d'améliorer le PMI et les performances.
 
-La deuxième approche pour l'amélioration de Word2Vec est la sous-échantillonnage des exemples positifs. Dans les grands corpus, on observe aussi que les mots fréquents commencent à apparaître dans beaucoup de contextes. Cependant, l'information fournie par les mots comme \texttt{le}, \texttt{elle}, ou \texttt{un} n'est pas très utile. Dans l'autre sens, les plongements genérés pour ces mots fréquents ne se changent pas beaucoup à partir d'un certain moment en raison du nombre considérable d'exemples d'entraînement. 
+La deuxième approche pour l'amélioration de Word2Vec est le sous-échantillonnage des exemples positifs. Dans les grands corpus, on observe aussi que les mots fréquents commencent à apparaître dans beaucoup de contextes. Cependant, l'information fournie par les mots comme \texttt{le}, \texttt{elle}, ou \texttt{un} n'est pas très utile. Dans l'autre sens, les plongements générés pour ces mots fréquents ne se changent pas beaucoup à partir d'un certain moment en raison du nombre considérable d'exemples d'entraînement. 
 
 Pour compenser le déséquilibre des mots fréquents, \cite{DBLP:conf/nips/MikolovSCCD13} proposent d'éliminer un exemple positif avec la probabilité donnée par l'équation~\ref{eq:subsamp}, où $f(m)$ désigne la fréquence relative du mot $m$ dans le corpus, et $t$ est un paramètre \textit{threshold} (seuil), typiquement $10^{-5}$. Ce paramètre détermine le degré d'agressivité du sous-échantillonnage en ce qui concerne les mots avec des fréquences inférieures à $t$.
 
@@ -110,7 +110,7 @@ Pour compenser le déséquilibre des mots fréquents, \cite{DBLP:conf/nips/Mikol
 P(m) = 1 - \sqrt{\frac{t}{f(m)}}
 \end{equation}
 
-En gardant à l'esprit ces approches, nous proposons les hypothèses suivantes:
+En gardant à l'esprit ces approches, nous proposons les hypothèses suivantes :
 
 \begin{enumerate}
     \item Le negative sampling améliorera les résultats des modèles de base de Word2Vec.
@@ -124,11 +124,11 @@ Pour clarifier la mise en œuvre des améliorations, nous expliquerons d'abord b
 
 Notre modèle Word2Vec est structuré principalement en deux programmes ; la construction des données d'entraînement et le processus d'entraînement lui-même, ce qui diffère de la plupart des approches, où l'apprentissage et le traitement des données ont lieu en même temps. La structure utilisée dans cette expérience vise à améliorer la clarté et la simplicité de l'implémentation.
 
-La mise en œuvre de la nouvelle méthode d'échantillonnage des exemples négatifs est assez simple. Après avoir construit les exemples positifs, nous créerons une distribution unigramme lisse sur la lexique en utilisant l'équation~\ref{eq:unigram}. À l'aide de la bibliothèque \texttt{numpy}, nous pouvons effectuer $k$ tirages sans remplacement selon cette distribution pour chaque exemple positif.
+La mise en œuvre de la nouvelle méthode d'échantillonnage des exemples négatifs est assez simple. Après avoir construit les exemples positifs, nous créerons une distribution unigramme lisse sur le lexique en utilisant l'équation~\ref{eq:unigram}. À l'aide de la bibliothèque \texttt{numpy}, nous pouvons effectuer $k$ tirages sans remplacement selon cette distribution pour chaque exemple positif.
 
-L'implémentation de l'échantillonnage des exemples positifs est un peu différente, car il existe des façons différentes de procéder. D'abord, il est intéressant de noter que le code de Word2Vec utilise une formule différente pour l'implémentation de cette méthode, à savoir $ P(m) = \frac{f(m)-t}{f(m)} - \sqrt{\frac{t}{f(m)}} $, où $P(m)$ donne la probabilité de conserver le mot $m$ \citep{word2vec_source}. La raison pour cette différence n'est pas expliquée dans le document original, mais dans le cadre de cette expérience nous notons des légères améliorations du temps d'exécution avec cette formule. En plus, l'implémentation originale utilise un seuil de $10^{-3}$ et non $10^{-5}$, ce que nous suivons pour cette mise en œuvre.
+L'implémentation de l'échantillonnage des exemples positifs est un peu différente, car il existe différentes façons de procéder. D'abord, il est intéressant de noter que le code de Word2Vec utilise une formule différente pour l'implémentation de cette méthode, à savoir $ P(m) = \frac{f(m)-t}{f(m)} - \sqrt{\frac{t}{f(m)}} $, où $P(m)$ donne la probabilité de conserver le mot $m$ \citep{word2vec_source}. La raison pour cette différence n'est pas expliquée dans le document original, mais dans le cadre de cette expérience, nous notons des légères améliorations du temps d'exécution avec cette formule. De plus, l'implémentation originale utilise un seuil de $10^{-3}$ et non $10^{-5}$, ce que nous suivons pour cette mise en œuvre.
 
-En plus, il y a des manières différentes concernant quand on effectue le sous-échantillonnage : soit on élimine les mots en ``glissant'' la fenêtre sur le corpus (c'est-à-dire on enlève les mots du contexte), soit nous éliminons les mots avant de glisser la fenêtre. Avec la deuxième option, que nous utiliserons dans cette expérience, nous aurons effectivement quelques mots dans les contextes qui n'auraient pas été présents avant le sous-échontillonnage. \cite{levy2015improving} ont appelé ce type de sous-échantillonnage ``dirty'' (sale) et ont constaté que les performances entre les deux options étaient comparables. Le processus de ce sous-échantillonnage aura donc lieu avant la construction des exemples d'entraînement ; nous parcourons le corpus et gardons chaque mot avec la probabilité $ P(m) = \frac{f(m)-t}{f(m)} - \sqrt{\frac{t}{f(m)}} $.
+Par ailleurs, il y a des manières différentes concernant quand on effectue le sous-échantillonnage : soit on élimine les mots en ``glissant'' la fenêtre sur le corpus (c'est-à-dire on enlève les mots du contexte), soit nous éliminons les mots avant de glisser la fenêtre. Avec la deuxième option, que nous utiliserons dans cette expérience, nous aurons effectivement quelques mots dans les contextes qui n'auraient pas été présents avant le sous-échantillonnage. \cite{levy2015improving} ont appelé ce type de sous-échantillonnage ``dirty'' (sale) et ont constaté que les performances entre les deux options étaient comparables. Le processus de ce sous-échantillonnage aura donc lieu avant la construction des exemples d'entraînement ; nous parcourons le corpus et gardons chaque mot avec la probabilité $ P(m) = \frac{f(m)-t}{f(m)} - \sqrt{\frac{t}{f(m)}} $.
 
 \subsection{Résultats} \label{résultats-1}
 
@@ -173,19 +173,19 @@ D'abord, la lecture des plongements a posé une difficulté à cause de la taill
 
 Nous avons d'abord implémenté la structure d'un arbre $k$-$d$ ainsi que l'algorithme de recherche selon la définition de \cite{friedman1977algorithm}, en utilisant une classe \texttt{KDTree} composée récursivement de nœuds \texttt{Node}.
 
-Cette implémentation a entraîné des difficultés en ce qui concerne la mémoire vive disponible, car la construction implémentée dans ce cas nécessite $2 \cdot |V|$ stockés en mémoire.\footnote{La construction de l'arbre $k$-$d$ s'effectue à partir de la liste de plongements, ce qui signifie qu'à la fin de la construction, nous avons au moins $2 \cdot |V|$ éléments stockés en memoire.} Pour le cadre de cette expérience, nous utilisons alors 100.000 plongements. Nous comparerons les durées d'exécution des recherches avec les arbres $k$-$d$ à celles des recherches exhaustives (c'est-à-dire des parcours na\"\i fs de l'espace).
+Cette implémentation a entraîné des difficultés en ce qui concerne la mémoire vive disponible, car la construction implémentée dans ce cas nécessite $2 \cdot |V|$ stockés en mémoire.\footnote{La construction de l'arbre $k$-$d$ s'effectue à partir de la liste de plongements, ce qui signifie qu'à la fin de la construction, nous avons au moins $2 \cdot |V|$ éléments stockés en mémoire.} Pour le cadre de cette expérience, nous utilisons alors 100.000 plongements. Nous comparerons les durées d'exécution des recherches avec les arbres $k$-$d$ à celles des recherches exhaustives (c'est-à-dire des parcours na\"\i fs de l'espace).
 
 % La bibliothèque Scikit-Learn \citep{scikit-learn} contient un implémentation des arbres $k$-$d$ que nous avons utilisé afin de comparer les résultats, ainsi que la recherche exhaustive (c'est-à-dire le parcours na\"\i ve de l'espace).
 % Les données ont posé d'autres problèmes, notamment lorsqu'il s'agissait de la construction des arbres $k$-$d$. 
 
-Pour l'évaluation, nous créeróns un ensemble de 100 analogies différentes en suivant le format \texttt{(homme, roi, femme, reine)}, ce qui signifie un calcul \texttt{vector(roi) - vector(homme) + vector(femme)} $\approx$ \texttt{vector(reine)}. Nous enregistrerons la durée d'exécution de la recherche du plus proche voisin pour le vecteur obtenu. Ensuite, nous comparerons le voisin trouvé avec le quatrième mot de la ligne, en comptant le nombre total des résultats ``corrects''.\footnote{Bien entendu, ce nombre restera toujours le même, car les plongements et les analogies sont statiques.}
+Pour l'évaluation, nous créerons un ensemble de 100 analogies différentes en suivant le format \texttt{(homme, roi, femme, reine)}, ce qui signifie un calcul \texttt{vector(roi) - vector(homme) + vector(femme)} $\approx$ \texttt{vector(reine)}. Nous enregistrerons la durée d'exécution de la recherche du plus proche voisin pour le vecteur obtenu. Ensuite, nous comparerons le voisin trouvé avec le quatrième mot de la ligne, en comptant le nombre total des résultats ``corrects''.\footnote{Bien entendu, ce nombre restera toujours le même, car les plongements et les analogies sont statiques.}
 
 \subsection{Résultats} \label{résultats-2}
 
 \begin{figure}[htpb]
     \centering
     \includegraphics[width=0.8\textwidth]{img/times.png}
-    \caption{Durée d'éxecution en secondes pour chaque recherche du plus proche voisin du vecteur calculé par \texttt{vector(A) + vector(B) - vector(C)}.}
+    \caption{Durée d'exécution en secondes pour chaque recherche du plus proche voisin du vecteur calculé par \texttt{vector(A) + vector(B) - vector(C)}.}
     \label{fig:times}
 \end{figure}
 
@@ -203,7 +203,7 @@ En plus, l'implémentation de l'arbre $k$-$d$ utilisé ici est assez simple, alo
 
 Le but de ce rapport était d'examiner le modèle Word2Vec et ses capacités dans quelques aspects. Surtout, nous avons exploré l'effet des méthodes d'améliorations présentées par \cite{DBLP:conf/nips/MikolovSCCD13} ainsi que l'aspect de l'évaluation des analogies.
 
-En ce qui concerne ses sujets, nous avons posé trois hypothèses sur les méthodes d'amélioration et une hypothèse sur l'évaluation des analogies. Nous avons crée, exécuté, et évalué deux expériences afin de répondre aux hypothèses. Les trois hypothèses sur le premier sujet ont été confirmées en montrant les améliorations sur le modèle de base, tandis que l'hypothèse du deuxième sujet avait des résultats mitigés. Les expériences ont montré plusieurs aspects intéressants du modèle Word2Vec, notamment les influences des différentes méthodes d'échantillonnage sur les performances du modèle et la capacité de l'inférence des analogies. 
+En ce qui concerne ses sujets, nous avons posé trois hypothèses sur les méthodes d'amélioration et une hypothèse sur l'évaluation des analogies. Nous avons créé, exécuté et évalué deux expériences afin de répondre aux hypothèses. Les trois hypothèses sur le premier sujet ont été confirmées en montrant les améliorations sur le modèle de base, tandis que l'hypothèse du deuxième sujet avait des résultats mitigés. Les expériences ont montré plusieurs aspects intéressants du modèle Word2Vec, notamment les influences des différentes méthodes d'échantillonnage sur les performances du modèle et la capacité de l'inférence des analogies. 
 
 Il existe pourtant des possibilités d'élargir le cadre des expériences en quelques aspects. Comme mentionné précédemment, une meilleure infrastructure de calcul pourrait faciliter les recherches sur plus de plongements et la construction des arbres $k$-$d$ plus grandes. Par contre, l'utilisation d'une approche approximative qui est plus efficace sur les données de larges dimensions comme le ``Locality Sensitive Hashing'' pourrait aussi conduire à de meilleurs résultats \citep{andoni2008near}. D'ailleurs, les aspects qui concernent l'entraînement du modèle, comme la taille de la fenêtre ou l'effet d'une fenêtre dynamique par rapport à une fenêtre non dynamique, n'ont pas été explorés. En examinant ces aspects, entre autres, on pourrait mieux comprendre et aborder les sujets présentés dans ce rapport. 
 
@@ -218,7 +218,7 @@ Il existe pourtant des possibilités d'élargir le cadre des expériences en que
 \begin{figure}[htpb]
     \centering
     \includegraphics[width=0.6\textwidth]{img/unigram.png}
-    \caption{Probabilité de tirer chaque mot du lexique selon la distribution originale (rouge) et la distribution unigramme à la puissance 0{,}75 (bleu) avec $minc = 5$.}
+    \caption{Probabilité de tirer chaque mot du lexique selon la distribution unigramme (rouge) et la distribution unigramme à la puissance 0{,}75 (bleu) avec $minc = 5$.}
     \label{fig:unigram}
 \end{figure}
 
