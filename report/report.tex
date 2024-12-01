@@ -6,7 +6,12 @@
 \usepackage{mathtools}
 \usepackage[sort&compress]{natbib}
 \usepackage[french]{babel}
-\usepackage[hidelinks]{hyperref}
+\usepackage[hidelinks,breaklinks=true]{hyperref}
+
+%\usepackage[breaklinks=true]{hyperref} % For URLs
+\usepackage{microtype}
+\sloppy
+
 
 \allowdisplaybreaks
 
@@ -27,7 +32,7 @@
 
 \maketitle
 
-\vspace{0.5in}
+\vspace{0.2in}
 
 \section{Introduction} \label{introduction}
 
@@ -198,7 +203,7 @@ En rapport avec notre hypothèse, nous pouvons donc affirmer que les calculs son
 Une raison pour ces résultats pourrait être un phénomène appelé \textit{curse of dimensionality} (le fléau de la dimension) par \cite{Freimer1961AdaptiveCP}, qui s'applique notamment aux tâches de recherche des plus proches voisins. Comme règle générale, on constate que pour des données en dimension $ k $, le nombre de points $ n $ devrait être $ n \gg 2^k $ pour que cette recherche soit efficace \citep{indyk2004nearest}. Si ce n'est pas le cas, cette méthode pourrait ne pas être beaucoup plus rapide qu'une recherche exhaustive.
 
 En plus, l'implémentation de l'arbre $k$-$d$ utilisé ici est assez simple, alors que les implémentations utilisées dans les bibliothèques comme Scikit-Learn utilisent des méthodes plus sophistiquées comme le pruning et les fonctionnalités de Cython \citep{behnel2011cython} ; une telle mise en œuvre surpasse le cadre de ce rapport. 
-
+\newpage
 \section{Conclusions et perspectives} \label{conclusions et perspectives}
 
 Le but de ce rapport était d'examiner le modèle Word2Vec et ses capacités dans quelques aspects. Surtout, nous avons exploré l'effet des méthodes d'améliorations présentées par \cite{DBLP:conf/nips/MikolovSCCD13} ainsi que l'aspect de l'évaluation des analogies.
