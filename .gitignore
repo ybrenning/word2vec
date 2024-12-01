@@ -5,6 +5,10 @@
 **.npy
 **.pkl
 
+!data/Le_comte_de_Monte_Cristo.100.sim
+!data/Le_comte_de_Monte_Cristo.txt
+!data/analogies.txt
+
 !scores/scores-baseline-d.npy
 !scores/scores-unigram-d.npy
 !scores/scores-subsampling-d.npy
